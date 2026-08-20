@@ -6,17 +6,25 @@ trade-offs). Check items off as they're actually done and deployed/working —
 not when the code is merely written. Add sub-items as they're discovered;
 don't let this file go stale.
 
-Status: design resolved, no code yet. Starting Phase 1.
+Status: Phase 1 scaffolded. Four items below need Ibrahim's Supabase/Vercel
+credentials to finish — see README.md Setup for the exact steps.
 
 ## Phase 1 — Scaffold
 
-- [ ] Next.js App Router project, TypeScript, Tailwind
-- [ ] Supabase project created; env vars wired (local + Vercel)
-- [ ] Supabase Auth: magic link enabled
-- [ ] Allow-list check enforced in Postgres (not just client-side)
-- [ ] RLS enabled on every table from the first migration onward
-- [ ] Deployed to Vercel (`vercel.app` subdomain) — before anything else is
-      built, so deployment is never a late surprise
+- [x] Next.js App Router project, TypeScript, Tailwind
+- [ ] Supabase project created; env vars wired (local + Vercel) — manual,
+      needs a real Supabase account (README.md step 1)
+- [x] Supabase Auth: magic link enabled (code side — `signInWithOtp`,
+      `/auth/confirm` callback route; the email template still needs
+      pointing at it manually, README.md step 3)
+- [x] Allow-list check enforced in Postgres (not just client-side) —
+      `supabase/migrations/0001_allowlist.sql`, a trigger on `auth.users`,
+      independent of the dashboard signup toggle
+- [x] RLS enabled on every table from the first migration onward —
+      `allowed_emails` has RLS on with no policies (deny-all); the pattern
+      carries into Phase 2's domain tables
+- [ ] Deployed to Vercel (`vercel.app` subdomain) — manual, needs a real
+      Vercel account (README.md step 6)
 
 ## Phase 2 — Schema and manual entry
 
