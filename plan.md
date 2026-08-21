@@ -6,25 +6,48 @@ trade-offs). Check items off as they're actually done and deployed/working —
 not when the code is merely written. Add sub-items as they're discovered;
 don't let this file go stale.
 
-Status: Phase 1 scaffolded. Four items below need Ibrahim's Supabase/Vercel
-credentials to finish — see README.md Setup for the exact steps.
+Status: Phase 1 scaffolded, and both accounts are wired via MCP (Supabase +
+Vercel connectors, connected mid-session). Three small things remain and are
+Supabase/Vercel *dashboard* steps with no MCP/API path — see below.
 
 ## Phase 1 — Scaffold
 
 - [x] Next.js App Router project, TypeScript, Tailwind
-- [ ] Supabase project created; env vars wired (local + Vercel) — manual,
-      needs a real Supabase account (README.md step 1)
+- [x] Supabase project created (`syllabus-to-calendar`, ref
+      `eecpacucxtabmdpcjgll`, us-west-1, free tier); local `.env.local`
+      wired with the real URL + publishable key (gitignored, not committed)
 - [x] Supabase Auth: magic link enabled (code side — `signInWithOtp`,
-      `/auth/confirm` callback route; the email template still needs
-      pointing at it manually, README.md step 3)
+      `/auth/confirm` callback route, verified against current Supabase docs)
 - [x] Allow-list check enforced in Postgres (not just client-side) —
-      `supabase/migrations/0001_allowlist.sql`, a trigger on `auth.users`,
-      independent of the dashboard signup toggle
+      `supabase/migrations/0001_allowlist.sql` applied to the live project.
+      Table + trigger live in a `private` schema, not `public` (see the
+      commit that moved it — a SECURITY DEFINER function in `public` is a
+      callable PostgREST endpoint unless something stops it). `get_advisors`
+      shows only the expected deny-all RLS notice.
 - [x] RLS enabled on every table from the first migration onward —
-      `allowed_emails` has RLS on with no policies (deny-all); the pattern
-      carries into Phase 2's domain tables
-- [ ] Deployed to Vercel (`vercel.app` subdomain) — manual, needs a real
-      Vercel account (README.md step 6)
+      confirmed via `get_advisors`; the pattern carries into Phase 2
+- [x] Deployed to Vercel — project `syllabus-to-calendar` linked to the
+      GitHub repo (auto-deploys on every push to
+      `claude/course-dashboard-brief-zm65t6`), build verified green
+      (`https://syllabus-to-calendar-mu.vercel.app`)
+
+**Three things remain, all manual — no Supabase/Vercel MCP tool reaches
+them:**
+
+- [ ] **Vercel env vars.** The live site currently 500s
+      (`get_runtime_errors` confirms: "Your project's URL and Key are
+      required"). Add in Project Settings → Environment Variables:
+      `NEXT_PUBLIC_SUPABASE_URL=https://eecpacucxtabmdpcjgll.supabase.co`,
+      `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_ID6rWP2Uv2GhKL0m0tqMQA_rzrX1PCR`,
+      and `SUPABASE_SERVICE_ROLE_KEY` (grab that one from Supabase Project
+      Settings → API — no MCP tool returns it, by design). Then redeploy.
+- [ ] **Disable public signup + point the magic-link email template at
+      `/auth/confirm`** — Supabase Auth settings, no config-API tool
+      available (README.md step 3).
+- [ ] **Create the one Supabase Auth user** for
+      `ibrahim.ansari0801@gmail.com` — Authentication → Users → Add user
+      (README.md step 4). Nothing can sign in until this exists, since
+      `shouldCreateUser: false` means the magic link can't create it.
 
 ## Phase 2 — Schema and manual entry
 
