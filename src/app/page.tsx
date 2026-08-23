@@ -1,7 +1,6 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 
-// Smoke-test home page for the Phase 1 scaffold: proves the session and RLS
-// wiring work end to end. Replaced by the real dashboard in Phase 2.
 export default async function Home() {
   const supabase = await createClient();
   const {
@@ -12,6 +11,12 @@ export default async function Home() {
     <main className="flex flex-1 flex-col items-center justify-center gap-4 p-6">
       <p className="text-sm text-neutral-500">Signed in as</p>
       <p className="font-medium">{user?.email}</p>
+      <Link
+        href="/terms"
+        className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white dark:bg-white dark:text-neutral-900"
+      >
+        Go to terms
+      </Link>
       <form action="/logout" method="post">
         <button
           type="submit"
