@@ -6,9 +6,10 @@ trade-offs). Check items off as they're actually done and deployed/working —
 not when the code is merely written. Add sub-items as they're discovered;
 don't let this file go stale.
 
-Status: Phase 1 scaffolded, and both accounts are wired via MCP (Supabase +
-Vercel connectors, connected mid-session). Three small things remain and are
-Supabase/Vercel *dashboard* steps with no MCP/API path — see below.
+Status: Phase 1 complete. Auth is live and verified end-to-end against the
+real deployment — not just "should work," an actual magic-link request,
+click, and session were traced through Supabase's own logs. Starting
+Phase 2 next.
 
 ## Phase 1 — Scaffold
 
@@ -50,11 +51,11 @@ via its own MCP server mid-session):
 - [x] **Public signup disabled** in Supabase Auth settings
 - [x] **The one Supabase Auth user** exists and is confirmed — verified
       directly via `select … from auth.users`
-- [ ] **End-to-end verification pending** — the first live magic-link
-      request failed on the bad SMTP password (see above); a retry after
-      the fix hasn't been confirmed successful yet. Check Supabase's
-      `auth_logs` for a `/otp` request with `status: 200` and no lingering
-      `535` errors before checking this off.
+- [x] **End-to-end verified** — traced a real magic-link request through
+      Supabase's `auth_logs` and Resend's send log: `/otp` → 200, Resend
+      shows the email sent and clicked, `/verify` → 200,
+      `auth.users.last_sign_in_at` updated. A real session, not an
+      assumption.
 
 ## Phase 2 — Schema and manual entry
 
