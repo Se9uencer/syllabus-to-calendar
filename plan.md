@@ -31,25 +31,30 @@ Supabase/Vercel *dashboard* steps with no MCP/API path — see below.
       `claude/course-dashboard-brief-zm65t6`), build verified green
       (`https://syllabus-to-calendar-mu.vercel.app`)
 
-**Three things remain, all manual — no Supabase/Vercel MCP tool reaches
-them:**
+**Auth is now fully wired**, including one dependency the original plan
+didn't anticipate — Supabase's built-in mailer won't let you edit the magic
+link template at all without custom SMTP configured (a hard lock in the
+dashboard, not just a warning). Resolved with Resend (free tier, connected
+via its own MCP server mid-session):
 
-- [ ] **Vercel env vars.** The live site currently 500s
-      (`get_runtime_errors` confirms: "Your project's URL and Key are
-      required"). Add in Project Settings → Environment Variables:
-      `NEXT_PUBLIC_SUPABASE_URL=https://eecpacucxtabmdpcjgll.supabase.co`,
-      `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_ID6rWP2Uv2GhKL0m0tqMQA_rzrX1PCR`,
-      and `SUPABASE_SECRET_KEY` — the new `sb_secret_...` key, not the
-      legacy `service_role` JWT (Settings → API Keys → "Publishable and
-      secret API keys"; grab it from the dashboard, no MCP tool returns it
-      by design). Then redeploy.
-- [ ] **Disable public signup + point the magic-link email template at
-      `/auth/confirm`** — Supabase Auth settings, no config-API tool
-      available (README.md step 3).
-- [ ] **Create the one Supabase Auth user** for
-      `ibrahim.ansari0801@gmail.com` — Authentication → Users → Add user
-      (README.md step 4). Nothing can sign in until this exists, since
-      `shouldCreateUser: false` means the magic link can't create it.
+- [x] **Vercel env vars** — set, production site confirmed 200 (was 500,
+      verified via `get_runtime_errors` before the fix, and a direct fetch
+      after)
+- [x] **Custom SMTP (Resend)** — required before the magic-link template
+      could be edited at all (see `mistakes.md` 2026-08-23 for a real
+      mistake made setting this up: a mis-parsed API key from the Resend
+      MCP tool's output caused a `535 "Authentication credentials invalid"`
+      failure, root-caused via Supabase's own auth logs and fixed)
+- [x] **Magic-link email template** points at `/auth/confirm` with the
+      `token_hash` flow
+- [x] **Public signup disabled** in Supabase Auth settings
+- [x] **The one Supabase Auth user** exists and is confirmed — verified
+      directly via `select … from auth.users`
+- [ ] **End-to-end verification pending** — the first live magic-link
+      request failed on the bad SMTP password (see above); a retry after
+      the fix hasn't been confirmed successful yet. Check Supabase's
+      `auth_logs` for a `/otp` request with `status: 200` and no lingering
+      `535` errors before checking this off.
 
 ## Phase 2 — Schema and manual entry
 
