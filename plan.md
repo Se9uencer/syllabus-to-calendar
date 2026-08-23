@@ -39,8 +39,10 @@ them:**
       required"). Add in Project Settings → Environment Variables:
       `NEXT_PUBLIC_SUPABASE_URL=https://eecpacucxtabmdpcjgll.supabase.co`,
       `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_ID6rWP2Uv2GhKL0m0tqMQA_rzrX1PCR`,
-      and `SUPABASE_SERVICE_ROLE_KEY` (grab that one from Supabase Project
-      Settings → API — no MCP tool returns it, by design). Then redeploy.
+      and `SUPABASE_SECRET_KEY` — the new `sb_secret_...` key, not the
+      legacy `service_role` JWT (Settings → API Keys → "Publishable and
+      secret API keys"; grab it from the dashboard, no MCP tool returns it
+      by design). Then redeploy.
 - [ ] **Disable public signup + point the magic-link email template at
       `/auth/confirm`** — Supabase Auth settings, no config-API tool
       available (README.md step 3).

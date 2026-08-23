@@ -37,12 +37,17 @@ Project Settings → Environment Variables:
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://eecpacucxtabmdpcjgll.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_ID6rWP2Uv2GhKL0m0tqMQA_rzrX1PCR
-SUPABASE_SERVICE_ROLE_KEY=<from Supabase Project Settings → API>
+SUPABASE_SECRET_KEY=<sb_secret_... from Settings → API Keys → "Publishable and secret API keys">
 ```
 
-The service role key isn't readable via the Supabase MCP tools by design —
-grab it from the dashboard. Redeploy after adding these (the live site 500s
-until then — expected, see `plan.md`).
+Use the new `sb_secret_...` secret key, not the legacy `service_role` key —
+same privileges (bypasses RLS), but independently rotatable and rejected if
+a browser ever sends it (see [Supabase's migration
+guide](https://supabase.com/docs/guides/getting-started/migrating-to-new-api-keys)).
+If the project only shows legacy keys, there's a "Create new API keys"
+button on that same page. Not readable via the Supabase MCP tools by
+design — grab it from the dashboard. Redeploy after adding these (the live
+site 500s until then — expected, see `plan.md`).
 
 For local dev, put the same three in `.env.local` (copy `.env.example`
 first) — this file already exists locally and is gitignored.
