@@ -8,8 +8,12 @@
 // bug. Appending "T00:00" to a bare date forces the local-time branch, so a
 // date-only due date round-trips to the correct calendar day instead of
 // shifting by the user's UTC offset.
-// Returns "" for an empty or not-yet-complete input (e.g. mid-typing) rather
-// than throwing — callers should treat "" the same as "no date entered."
+// Returns "" for an empty value or garbage input rather than throwing —
+// callers should treat "" the same as "no date entered." Note that a
+// partial value (e.g. "2026-10") is not garbage as far as JS Date parsing
+// is concerned — "YYYY-MM" is valid ISO 8601 and parses fine — but native
+// date/datetime-local inputs never actually emit a partial string through
+// their .value in the first place, so this doesn't come up in practice.
 export function localInputToIsoUtc(value: string, dateOnly: boolean): string {
   if (!value) return "";
   const withTime = dateOnly ? `${value}T00:00` : value;

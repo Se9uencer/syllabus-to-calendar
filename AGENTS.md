@@ -45,7 +45,25 @@ writing code.
 Next.js (App Router) · TypeScript · Tailwind · Supabase (Postgres, Storage,
 Auth) · Vercel. Server Components query Supabase directly — there is no JSON
 API layer (see `docs/PLAN.md`), so don't introduce one for a feature that
-doesn't need it.
+doesn't need it. Vitest for tests (`npm test`), colocated as `*.test.ts`
+next to the file it covers.
+
+## Testing
+
+Not everything needs a test — CRUD wired straight to Supabase is thin glue
+code whose correctness lives in the database's own constraints (RLS,
+`CHECK`s, FKs); those are verified by actually exercising them, not by unit
+tests. Reach for tests on **pure functions with real edge cases** — the
+grading calculator (Phase 3) is the central example, and
+`src/lib/local-datetime.ts` is the existing one worth reading before adding
+more: date/timezone logic is exactly where an untested assumption becomes a
+silent, hard-to-notice bug.
+
+Any test touching `Date`/timezones must pin `process.env.TZ = "UTC"` in a
+`beforeAll` (see `local-datetime.test.ts`) so assertions are deterministic
+regardless of where the suite runs — the code under test stays
+timezone-sensitive by design, only the test process's notion of "local"
+gets fixed.
 
 ## Working conventions
 
