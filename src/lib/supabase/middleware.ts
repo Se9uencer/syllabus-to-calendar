@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC_PATHS = ["/login", "/auth/confirm"];
+const PUBLIC_PATHS = ["/login", "/auth/confirm", "/feed"];
 
 // Refreshes the auth session on every request (required by @supabase/ssr —
 // Server Components can't write cookies themselves, see server.ts) and gates

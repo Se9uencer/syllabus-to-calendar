@@ -6,9 +6,9 @@ trade-offs). Check items off as they're actually done and deployed/working —
 not when the code is merely written. Add sub-items as they're discovered;
 don't let this file go stale.
 
-Status: Phase 2 schema + CRUD are in code; Phase 3 grades (calculator,
-standing, target projection, scenario sandbox) implemented. Manual entry of
-one real quarter and production smoke-checks remain for you.
+Status: Phase 3 grades shipped. Phase 4 `.ics` feed (subscribe URL +
+download) implemented; agenda/month deferred. Apply migration 0003 on the
+live project if not yet applied. Manual entry of one real quarter remains.
 
 ## Phase 1 — Scaffold
 
@@ -81,12 +81,13 @@ via its own MCP server mid-session):
 ## Phase 4 — Calendar
 
 - [ ] Agenda list: grouped by week, shows course + weight + drift flag
-- [ ] Month grid
-- [ ] `.ics` feed endpoint at a revocable token URL
-- [ ] Stable per-assignment UIDs (derived from assignment id, never
+      (deferred — Phase 4b)
+- [ ] Month grid (deferred — Phase 4b)
+- [x] `.ics` feed endpoint at a revocable token URL (`/feed/[token]`)
+- [x] Stable per-assignment UIDs (derived from assignment id, never
       title/date)
-- [ ] Download button serving the same generated body
-- [ ] Only Confirmed Items and linked Canvas items appear — never Draft Items
+- [x] Download button serving the same generated body (`/ics/download`)
+- [x] Only Confirmed Items appear — never Draft Items (linked Canvas items: Phase 6)
 
 ## Phase 5 — Syllabus extraction
 

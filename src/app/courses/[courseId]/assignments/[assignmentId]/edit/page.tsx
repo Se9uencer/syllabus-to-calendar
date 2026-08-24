@@ -14,7 +14,7 @@ export default async function AssignmentEditPage({
   const [{ data: assignment }, { data: categories }] = await Promise.all([
     supabase
       .from("assignments")
-      .select("id, title, kind, due_at, due_is_date_only, category_id, notes")
+      .select("id, title, kind, due_at, due_on, due_is_date_only, category_id, notes")
       .eq("id", assignmentId)
       .maybeSingle(),
     supabase

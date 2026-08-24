@@ -39,6 +39,7 @@ export function AssignmentForm({
     <form action={formAction} className="space-y-3">
       <input type="hidden" name="course_id" value={courseId} />
       <input type="hidden" name="due_at" value={dueAtIso} />
+      <input type="hidden" name="due_on" value={dateOnly ? rawValue : ""} />
       <Field label="Title" htmlFor="assignment-title">
         <input
           id="assignment-title"

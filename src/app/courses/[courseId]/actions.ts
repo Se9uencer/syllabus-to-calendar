@@ -198,6 +198,9 @@ export async function createAssignment(
   // doesn't know the user's timezone, so the conversion can't happen here.
   const due_at = String(formData.get("due_at") ?? "") || null;
   const due_is_date_only = formData.get("due_is_date_only") === "on";
+  const due_on_raw = String(formData.get("due_on") ?? "").trim();
+  const due_on =
+    due_is_date_only && /^\d{4}-\d{2}-\d{2}$/.test(due_on_raw) ? due_on_raw : null;
   const notes = String(formData.get("notes") ?? "").trim();
 
   if (!course_id || !title) {
@@ -224,6 +227,7 @@ export async function createAssignment(
     kind,
     due_at,
     due_is_date_only,
+    due_on,
     notes: notes || null,
   });
 
@@ -246,6 +250,9 @@ export async function updateAssignment(
   const kind = String(formData.get("kind") ?? "assignment");
   const due_at = String(formData.get("due_at") ?? "") || null;
   const due_is_date_only = formData.get("due_is_date_only") === "on";
+  const due_on_raw = String(formData.get("due_on") ?? "").trim();
+  const due_on =
+    due_is_date_only && /^\d{4}-\d{2}-\d{2}$/.test(due_on_raw) ? due_on_raw : null;
   const notes = String(formData.get("notes") ?? "").trim();
 
   if (!id || !course_id || !title) {
@@ -273,6 +280,7 @@ export async function updateAssignment(
       kind,
       due_at,
       due_is_date_only,
+      due_on,
       notes: notes || null,
     })
     .eq("id", id);

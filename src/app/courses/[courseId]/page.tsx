@@ -20,6 +20,7 @@ type AssignmentRow = {
   title: string;
   kind: string;
   due_at: string | null;
+  due_on: string | null;
   due_is_date_only: boolean;
   category_id: string | null;
 };
@@ -63,7 +64,7 @@ export default async function CourseDetailPage({
         .order("name"),
       supabase
         .from("assignments")
-        .select("id, title, kind, due_at, due_is_date_only, category_id")
+        .select("id, title, kind, due_at, due_on, due_is_date_only, category_id")
         .eq("course_id", courseId)
         .order("due_at", { nullsFirst: false }),
     ]);
@@ -256,11 +257,13 @@ function AssignmentGradeRow({
           <span className="text-neutral-500">({a.kind})</span>
           <br />
           <span className="text-neutral-500">
-            {a.due_at
-              ? a.due_is_date_only
-                ? new Date(a.due_at).toLocaleDateString()
-                : new Date(a.due_at).toLocaleString()
-              : "No due date"}
+            {a.due_is_date_only && a.due_on
+              ? a.due_on
+              : a.due_at
+                ? a.due_is_date_only
+                  ? new Date(a.due_at).toLocaleDateString()
+                  : new Date(a.due_at).toLocaleString()
+                : "No due date"}
           </span>
           {grade && (
             <>

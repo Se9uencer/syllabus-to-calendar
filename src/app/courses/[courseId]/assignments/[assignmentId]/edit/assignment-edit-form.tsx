@@ -34,6 +34,7 @@ export function AssignmentEditForm({
     title: string;
     kind: string;
     due_at: string | null;
+    due_on: string | null;
     due_is_date_only: boolean;
     category_id: string | null;
     notes: string | null;
@@ -48,8 +49,12 @@ export function AssignmentEditForm({
   // would use the server's timezone and mismatch the client's on hydration.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- deliberate: standard client-only-value pattern, not a synchronization bug
-    setRawValue(isoUtcToLocalInput(assignment.due_at ?? "", assignment.due_is_date_only));
-  }, [assignment.due_at, assignment.due_is_date_only]);
+    if (assignment.due_is_date_only && assignment.due_on) {
+      setRawValue(assignment.due_on);
+    } else {
+      setRawValue(isoUtcToLocalInput(assignment.due_at ?? "", assignment.due_is_date_only));
+    }
+  }, [assignment.due_at, assignment.due_on, assignment.due_is_date_only]);
 
   const dueAtIso = localInputToIsoUtc(rawValue, dateOnly);
 
@@ -58,6 +63,7 @@ export function AssignmentEditForm({
       <input type="hidden" name="id" value={assignment.id} />
       <input type="hidden" name="course_id" value={courseId} />
       <input type="hidden" name="due_at" value={dueAtIso} />
+      <input type="hidden" name="due_on" value={dateOnly ? rawValue : ""} />
       <Field label="Title" htmlFor="title">
         <input
           id="title"
