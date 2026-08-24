@@ -6,10 +6,9 @@ trade-offs). Check items off as they're actually done and deployed/working —
 not when the code is merely written. Add sub-items as they're discovered;
 don't let this file go stale.
 
-Status: Phase 1 complete. Auth is live and verified end-to-end against the
-real deployment — not just "should work," an actual magic-link request,
-click, and session were traced through Supabase's own logs. Starting
-Phase 2 next.
+Status: Phase 2 schema + CRUD are in code; Phase 3 grades (calculator,
+standing, target projection, scenario sandbox) implemented. Manual entry of
+one real quarter and production smoke-checks remain for you.
 
 ## Phase 1 — Scaffold
 
@@ -59,24 +58,24 @@ via its own MCP server mid-session):
 
 ## Phase 2 — Schema and manual entry
 
-- [ ] Migration: `terms`, `term_breaks`, `courses`, `course_meetings`,
+- [x] Migration: `terms`, `term_breaks`, `courses`, `course_meetings`,
       `grade_categories`, `assignments`, `grades` (see `docs/PLAN.md` for
       columns)
-- [ ] CRUD UI: terms (incl. breaks, finals window)
-- [ ] CRUD UI: courses (belongs to a term)
-- [ ] CRUD UI: grade categories per course
-- [ ] CRUD UI: assignments (belongs to a course + category)
+- [x] CRUD UI: terms (incl. breaks, finals window)
+- [x] CRUD UI: courses (belongs to a term)
+- [x] CRUD UI: grade categories per course
+- [x] CRUD UI: assignments (belongs to a course + category)
 - [ ] Manually enter one real quarter's worth of courses as a working test
 
 ## Phase 3 — Grades
 
-- [ ] Grading function: pure, takes `(category, weight, score, max)[]`
-- [ ] Current Standing: graded-work-only average + "X% of grade determined"
-- [ ] drop-lowest-N per category
-- [ ] replace-lowest-with between categories
-- [ ] Target-grade projection, including flagging when a target is
+- [x] Grading function: pure, takes `(category, weight, score, max)[]`
+- [x] Current Standing: graded-work-only average + "X% of grade determined"
+- [x] drop-lowest-N per category
+- [x] replace-lowest-with between categories
+- [x] Target-grade projection, including flagging when a target is
       arithmetically unreachable
-- [ ] Scenario sandbox: editable copy (add/delete/recategorize/rescore),
+- [x] Scenario sandbox: editable copy (add/delete/recategorize/rescore),
       clearly distinct in the UI from real data, never persisted as truth
 
 ## Phase 4 — Calendar

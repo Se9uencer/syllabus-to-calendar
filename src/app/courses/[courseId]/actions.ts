@@ -298,3 +298,77 @@ export async function deleteAssignment(formData: FormData) {
     revalidatePath(`/courses/${course_id}`);
   }
 }
+
+// -------------------------------------------------------------- grades ---
+
+export async function upsertGrade(
+  _prevState: ActionResult | null,
+  formData: FormData,
+): Promise<ActionResult> {
+  const course_id = String(formData.get("course_id") ?? "");
+  const assignment_id = String(formData.get("assignment_id") ?? "");
+  const score = Number(formData.get("score"));
+  const max_score = Number(formData.get("max_score"));
+
+  if (!course_id || !assignment_id) {
+    return { ok: false, error: "Missing assignment." };
+  }
+  if (Number.isNaN(score) || Number.isNaN(max_score)) {
+    return { ok: false, error: "Score and max are required." };
+  }
+
+  const supabase = await createClient();
+  const { data: assignment } = await supabase
+    .from("assignments")
+    .select("id, course_id")
+    .eq("id", assignment_id)
+    .maybeSingle();
+
+  if (!assignment || assignment.course_id !== course_id) {
+    return { ok: false, error: "That assignment doesn't belong to this course." };
+  }
+
+  const { data: existing } = await supabase
+    .from("grades")
+    .select("id")
+    .eq("assignment_id", assignment_id)
+    .maybeSingle();
+
+  const graded_at = new Date().toISOString();
+
+  if (existing) {
+    const { error } = await supabase
+      .from("grades")
+      .update({ score, max_score, graded_at })
+      .eq("id", existing.id);
+    if (error) {
+      return { ok: false, error: friendlyDbError(error) };
+    }
+  } else {
+    const { error } = await supabase.from("grades").insert({
+      assignment_id,
+      score,
+      max_score,
+      graded_at,
+    });
+    if (error) {
+      return { ok: false, error: friendlyDbError(error) };
+    }
+  }
+
+  revalidatePath(`/courses/${course_id}`);
+  return { ok: true };
+}
+
+export async function deleteGrade(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  const course_id = String(formData.get("course_id") ?? "");
+  if (!id) return;
+
+  const supabase = await createClient();
+  await supabase.from("grades").delete().eq("id", id);
+
+  if (course_id) {
+    revalidatePath(`/courses/${course_id}`);
+  }
+}

@@ -9,7 +9,7 @@ writing code.
    Confirmed Item, Observation, Link, Drift, Grade Category, Scenario, …) are
    used narrowly and deliberately. If you're about to name something, check
    whether it already has a name here first.
-2. **`docs/adr/`** — five decisions, each the result of a real trade-off. Don't
+2. **`docs/adr/`** — six decisions, each the result of a real trade-off. Don't
    relitigate them in code review with yourself; if one turns out to be wrong,
    say so and propose a new ADR that supersedes it, don't just quietly drift
    away from it.
@@ -89,7 +89,7 @@ gets fixed.
   repeating.
 - If a decision got made that's hard to reverse, would surprise a future
   reader, and came from a real trade-off, write an ADR in `docs/adr/` (see the
-  existing five for the format) and add the term to `CONTEXT.md` if it
+  existing six for the format) and add the term to `CONTEXT.md` if it
   introduces new language.
 
 <!-- BEGIN:nextjs-agent-rules -->
